@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="http://nnblog-storage.b0.upaiyun.com/img/favicon.ico?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在项目开发中，为了减轻数据库的 I/O 压力，加快请求的响应速度，缓存是常用到的技术。Redis 和 Memcache 是现在常用的两个用来做数据缓存的技术。">
+<meta name="keywords" content="数据库,MongoDB,Node.js,MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让写入数据库的数据自动写入缓存">
+<meta property="og:url" content="http://yoursite.com/2017/03/24/让写入数据库的数据自动写入缓存/index.html">
+<meta property="og:site_name" content="NiuNiu&#39;s Note">
+<meta property="og:description" content="在项目开发中，为了减轻数据库的 I/O 压力，加快请求的响应速度，缓存是常用到的技术。Redis 和 Memcache 是现在常用的两个用来做数据缓存的技术。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-06T16:04:38.288Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="让写入数据库的数据自动写入缓存">
+<meta name="twitter:description" content="在项目开发中，为了减轻数据库的 I/O 压力，加快请求的响应速度，缓存是常用到的技术。Redis 和 Memcache 是现在常用的两个用来做数据缓存的技术。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="NiuNiu's Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/24/让写入数据库的数据自动写入缓存/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>让写入数据库的数据自动写入缓存 | NiuNiu's Note</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-83144924-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-83144924-1');
+</script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">NiuNiu's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/24/让写入数据库的数据自动写入缓存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="NiuNiu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://nnblog-storage.b0.upaiyun.com/img/head-photo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NiuNiu's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">让写入数据库的数据自动写入缓存
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-03-24 14:56:11" itemprop="dateCreated datePublished" datetime="2017-03-24T14:56:11+08:00">2017-03-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-10-07 00:04:38" itemprop="dateModified" datetime="2018-10-07T00:04:38+08:00">2018-10-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/24/让写入数据库的数据自动写入缓存/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/03/24/让写入数据库的数据自动写入缓存/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/03/24/让写入数据库的数据自动写入缓存/" class="leancloud_visitors" data-flag-title="让写入数据库的数据自动写入缓存">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在项目开发中，为了减轻数据库的 I/O 压力，加快请求的响应速度，缓存是常用到的技术。<a href="https://redis.io/" target="_blank" rel="noopener">Redis</a> 和 <a href="https://memcached.org/" target="_blank" rel="noopener">Memcache</a> 是现在常用的两个用来做数据缓存的技术。<br><a id="more"></a><br>数据缓存一些常见的做法是，让数据写入到数据库以后通过一些自动化的脚本自动同步到缓存，或者在向数据库写数据后再手动向缓存写一次数据。这些做法不免都有些繁琐，且代码也不好维护。我在写 Node.js 项目的时候，发现<strong>利用 <a href="https://www.npmjs.com/package/mongoose" target="_blank" rel="noopener">Mongoose</a>（一个 MongoDB 的 ODM）和 <a href="https://www.npmjs.com/package/sequelize" target="_blank" rel="noopener">Sequelize</a>（一个 MySQL 的 ORM）的一些功能特性能够优雅的做到让写入到 MongoDB/MySQL 的数据自动写入到 Redis，并且在做查询操作的时候能够自动地优先从缓存中查找数据，若缓存中找不到才进入 DB 中查找，并将 DB 中找到的数据写入缓存。</strong></p>
+<p>本文不讲解 Mongoose 和 Sequelize 的基本用法，这里只讲解如何做到上面所说的自动缓存。</p>
+<blockquote>
+<p>本文要用到的一些库为 <a href="https://www.npmjs.com/package/mongoose" target="_blank" rel="noopener">Mongoose</a>、<a href="https://www.npmjs.com/package/sequelize" target="_blank" rel="noopener">Sequelize</a>、<a href="https://www.npmjs.com/package/ioredis" target="_blank" rel="noopener">ioredis</a> 和 <a href="https://www.npmjs.com/package/lodash" target="_blank" rel="noopener">lodash</a>。Node.js 版本为 7.7.1。</p>
+</blockquote>
+<h3 id="在-MongoDB-中实现自动缓存"><a href="#在-MongoDB-中实现自动缓存" class="headerlink" title="在 MongoDB 中实现自动缓存"></a>在 MongoDB 中实现自动缓存</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// redis.js</span></span><br><span class="line"><span class="keyword">const</span> Redis = <span class="built_in">require</span>(<span class="string">'ioredis'</span>);</span><br><span class="line"><span class="keyword">const</span> Config = <span class="built_in">require</span>(<span class="string">'../config'</span>);</span><br><span class="line">     </span><br><span class="line"><span class="keyword">const</span> redis = <span class="keyword">new</span> Redis(Config.redis);</span><br><span class="line">     </span><br><span class="line"><span class="built_in">module</span>.exports = redis;</span><br></pre></td></tr></table></figure>
+<p>上面文件的代码主要用于连接 redis。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mongodb.js</span></span><br><span class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>);</span><br><span class="line">    </span><br><span class="line">mongoose.Promise = global.Promise;</span><br><span class="line"><span class="keyword">const</span> demoDB = mongoose.createConnection(<span class="string">'mongodb://127.0.0.1/demo'</span>, &#123;&#125;);</span><br><span class="line">     </span><br><span class="line"><span class="built_in">module</span>.exports = demoDB;</span><br></pre></td></tr></table></figure></p>
+<p>上面是连接 mongodb 的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mongoBase.js</span></span><br><span class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>);</span><br><span class="line"><span class="keyword">const</span> Schema = mongoose.Schema;</span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">'./redis'</span>);</span><br><span class="line">      </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">baseFind</span>(<span class="params">method, params, time</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> self = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">const</span> collectionName = <span class="keyword">this</span>.collection.name;</span><br><span class="line">  <span class="keyword">const</span> dbName = <span class="keyword">this</span>.db.name;</span><br><span class="line">  <span class="keyword">const</span> redisKey = [dbName, collectionName, <span class="built_in">JSON</span>.stringify(params)].join(<span class="string">':'</span>);</span><br><span class="line">  <span class="keyword">const</span> expireTime = time || <span class="number">3600</span>;</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    redis.get(redisKey, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (err) <span class="keyword">return</span> reject(err);</span><br><span class="line">      <span class="keyword">if</span> (data) <span class="keyword">return</span> resolve(<span class="built_in">JSON</span>.parse(data));</span><br><span class="line">      </span><br><span class="line">      self[method](params).lean().exec(<span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (err) <span class="keyword">return</span> reject(err);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">Object</span>.keys(data).length === <span class="number">0</span>) <span class="keyword">return</span> resolve(data);</span><br><span class="line">      </span><br><span class="line">        redis.setex(redisKey, expireTime, <span class="built_in">JSON</span>.stringify(data));</span><br><span class="line">        resolve(data);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line">      </span><br><span class="line"><span class="keyword">const</span> Methods = &#123;</span><br><span class="line">  findCache(params, time) &#123;</span><br><span class="line">    <span class="keyword">return</span> baseFind.call(<span class="keyword">this</span>, <span class="string">'find'</span>, params, time);</span><br><span class="line">  &#125;,</span><br><span class="line">  findOneCache(params, time) &#123;</span><br><span class="line">    <span class="keyword">return</span> baseFind.call(<span class="keyword">this</span>, <span class="string">'findOne'</span>, params, time);</span><br><span class="line">  &#125;,</span><br><span class="line">  findByIdCache(params, time) &#123;</span><br><span class="line">    <span class="keyword">return</span> baseFind.call(<span class="keyword">this</span>, <span class="string">'findById'</span>, params, time);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">     </span><br><span class="line"><span class="keyword">const</span> BaseSchema = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.defaultOpts = &#123;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">      </span><br><span class="line">BaseSchema.prototype.extend = <span class="function"><span class="keyword">function</span> (<span class="params">schemaOpts</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> schema = <span class="keyword">this</span>.wrapMethods(<span class="keyword">new</span> Schema(schemaOpts, &#123;</span><br><span class="line">    toObject: &#123; <span class="attr">virtuals</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">    toJSON: &#123; <span class="attr">virtuals</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  &#125;));</span><br><span class="line">       </span><br><span class="line">  <span class="keyword">return</span> schema;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">BaseSchema.prototype.wrapMethods = <span class="function"><span class="keyword">function</span> (<span class="params">schema</span>) </span>&#123;</span><br><span class="line">  schema.post(<span class="string">'save'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> dbName = data.db.name;</span><br><span class="line">    <span class="keyword">const</span> collectionName = data.collection.name;</span><br><span class="line">    <span class="keyword">const</span> redisKey = [dbName, collectionName, <span class="built_in">JSON</span>.stringify(data._id)].join(<span class="string">':'</span>);</span><br><span class="line">     </span><br><span class="line">    redis.setex(redisKey, <span class="number">3600</span>, <span class="built_in">JSON</span>.stringify(<span class="keyword">this</span>));</span><br><span class="line">  &#125;);</span><br><span class="line">     </span><br><span class="line">  <span class="built_in">Object</span>.keys(Methods).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">method</span>) </span>&#123;</span><br><span class="line">    schema.statics[method] = Methods[method];</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> schema;</span><br><span class="line">&#125;;</span><br><span class="line">       </span><br><span class="line"><span class="built_in">module</span>.exports = <span class="keyword">new</span> BaseSchema();</span><br></pre></td></tr></table></figure>
+<p>上面的代码是在用 mongoose 建模的时候，所有的 schema 都会继承这个 BaseSchema。这个 BaseSchema 里面就为所有继承它的 schema 添加了一个模型在执行 save 方法后触发的文档中间件，这个中间件的作用就是在数据被写入 MongoDB 后再自动写入 redis。然后还为每个继承它的 schema 添加了三个静态方法，分别是 findByIdCache、findOneCache 和 findCache，它们分别是 findById、findOne 和 find 方法的扩展，只是不同之处在于用添加的三个方法进行查询时会根据传入的条件先从 redis 中查找数据，若查到就返回数据，若查不到就继续调用所对应的的原生方法进入 MongoDB 中查找，若在 MongoDB 中查到了，就把查到的数据写入 redis，供以后的查询使用。添加的这三个静态方法的调用方法和他们所对应的的原生方法一致，只是可以多传入一个时间，用来设置数据在缓存中的过期时间。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// userModel.js</span></span><br><span class="line"><span class="keyword">const</span> BaseSchema = <span class="built_in">require</span>(<span class="string">'./mongoBase'</span>);</span><br><span class="line"><span class="keyword">const</span> mongoDB = <span class="built_in">require</span>(<span class="string">'./mongodb.js'</span>);</span><br><span class="line">     </span><br><span class="line"><span class="keyword">const</span> userSchema = BaseSchema.extend(&#123;</span><br><span class="line">  name: <span class="built_in">String</span>,</span><br><span class="line">  age: <span class="built_in">Number</span>,</span><br><span class="line">  addr: <span class="built_in">String</span>,</span><br><span class="line">&#125;);</span><br><span class="line">       </span><br><span class="line"><span class="built_in">module</span>.exports = mongoDB.model(<span class="string">'User'</span>, userSchema, <span class="string">'user'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这是为 user 集合建的一个模型，它就通过 BaseSchema.extend 方法继承了上面说到的中间件和静态方法。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> UserModel = <span class="built_in">require</span>(<span class="string">'./userModl'</span>);</span><br><span class="line">      </span><br><span class="line"><span class="keyword">const</span> action = <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> user = <span class="keyword">await</span> UserModel.create(&#123; <span class="attr">name</span>: <span class="string">'node'</span>, <span class="attr">age</span>: <span class="number">7</span>, <span class="attr">addr</span>: <span class="string">'nodejs.org'</span> &#125;);</span><br><span class="line">  <span class="keyword">const</span> data1 = <span class="keyword">await</span> UserModel.findByIdCache(user._id.toString());</span><br><span class="line">  <span class="keyword">const</span> data2 = <span class="keyword">await</span> UserModel.findOneCache(&#123; <span class="attr">age</span>: <span class="number">7</span> &#125;);</span><br><span class="line">  <span class="keyword">const</span> data3 = <span class="keyword">await</span> UserModel.findCache(&#123; <span class="attr">name</span>: <span class="string">'node'</span>, <span class="attr">age</span>: <span class="number">7</span> &#125;, <span class="number">7200</span>);</span><br><span class="line">  <span class="keyword">return</span> [ data1, data2, data3];</span><br><span class="line">&#125;;</span><br><span class="line">       </span><br><span class="line">action().then(<span class="built_in">console</span>.log).catch(<span class="built_in">console</span>.error);</span><br></pre></td></tr></table></figure></p>
+<p>上面的的代码就是向 User 集合中写了一条数据后，然后依次调用了我们自己添加的三个用于查询的静态方法。把 redis 的 monitor 打开，发现代码已经按我们预想的那样执行了。</p>
+<p>总结，上面的方案主要通过 Mongoose 的中间件和静态方法达到了我们想要的功能。但添加的 findOneCache 和 findCache 方法很难达到较高的数据一致性，若要追求很强的数据一致性就用它们所对应的的 findOne 和 find。findByIdCache 能保证很好的数据一致性，但也仅限于修改数据时是查询出来再 save，若是直接 update 也做不到数据一致性。</p>
+<h3 id="在-MySQL-中实现自动缓存"><a href="#在-MySQL-中实现自动缓存" class="headerlink" title="在 MySQL 中实现自动缓存"></a>在 MySQL 中实现自动缓存</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mysql.js</span></span><br><span class="line"><span class="keyword">const</span> Sequelize = <span class="built_in">require</span>(<span class="string">'sequelize'</span>);</span><br><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">'lodash'</span>);</span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">'./redis'</span>);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">const</span> setCache = <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (_.isEmpty(data) || !data.id) <span class="keyword">return</span>;</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">const</span> dbName = data.$modelOptions.sequelize.config.database;</span><br><span class="line">  <span class="keyword">const</span> tableName = data.$modelOptions.tableName;</span><br><span class="line">  <span class="keyword">const</span> redisKey = [dbName, tableName, <span class="built_in">JSON</span>.stringify(data.id)].join(<span class="string">':'</span>)</span><br><span class="line">  redis.setex(redisKey, <span class="number">3600</span>, <span class="built_in">JSON</span>.stringify(data.toJSON()));</span><br><span class="line">&#125;;</span><br><span class="line">      </span><br><span class="line"><span class="keyword">const</span> sequelize = <span class="keyword">new</span> Sequelize(<span class="string">'demo'</span>, <span class="string">'root'</span>, <span class="string">''</span>, &#123;</span><br><span class="line">  host: <span class="string">'localhost'</span>,</span><br><span class="line">  port: <span class="number">3306</span>,</span><br><span class="line">  hooks: &#123;</span><br><span class="line">    afterUpdate(data) &#123;</span><br><span class="line">      setCache(data);</span><br><span class="line">    &#125;,</span><br><span class="line">    afterCreate(data) &#123;</span><br><span class="line">      setCache(data);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line">      </span><br><span class="line">sequelize</span><br><span class="line">  .authenticate()</span><br><span class="line">  .then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Connection has been established successfully.'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  .catch(<span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'Unable to connect to the database:'</span>, err);</span><br><span class="line">  &#125;);</span><br><span class="line">      </span><br><span class="line"><span class="built_in">module</span>.exports = sequelize;</span><br></pre></td></tr></table></figure>
+<p>上面的代码主要作用是连接 MySQL 并生成 sequelize 实例，在构建 sequelize 实例的时候添加了两个钩子方法 afterUpdate 和 afterCreate。afterUpdate 用于在模型实例更新后执行的函数，注意<strong>必须是模型实例更新</strong>才会触发此方法，如果是直接类似 Model.update 这种方式更新是不会触发这个钩子函数的，只能是一个已经存在的实例调用 save 方法的时候会触发这个钩子。afterCreate 是在模型实例创建后调用的钩子函数。这两个钩子的主要目的就是用来当一条数据被写入到 MySQL 后，再自动的写入到 redis，即实现自动缓存。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mysqlBase.js</span></span><br><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">'lodash'</span>);</span><br><span class="line"><span class="keyword">const</span> Sequelize = <span class="built_in">require</span>(<span class="string">'sequelize'</span>);</span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">'./redis'</span>);</span><br><span class="line">       </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">baseFind</span>(<span class="params">method, params, time</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> self = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">const</span> dbName = <span class="keyword">this</span>.sequelize.config.database;</span><br><span class="line">  <span class="keyword">const</span> tableName = <span class="keyword">this</span>.name;</span><br><span class="line">  <span class="keyword">const</span> redisKey = [dbName, tableName, <span class="built_in">JSON</span>.stringify(params)].join(<span class="string">':'</span>);</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> cacheData = <span class="keyword">await</span> redis.get(redisKey);</span><br><span class="line">    <span class="keyword">if</span> (!_.isEmpty(cacheData)) <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(cacheData);</span><br><span class="line">       </span><br><span class="line">    <span class="keyword">const</span> dbData = <span class="keyword">await</span> self[method](params);</span><br><span class="line">    <span class="keyword">if</span> (_.isEmpty(dbData)) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">      </span><br><span class="line">    redis.setex(redisKey, time || <span class="number">3600</span>, <span class="built_in">JSON</span>.stringify(dbData));</span><br><span class="line">    <span class="keyword">return</span> dbData;</span><br><span class="line">  &#125;)();</span><br><span class="line">&#125;</span><br><span class="line">       </span><br><span class="line"><span class="keyword">const</span> Base = <span class="function"><span class="keyword">function</span> (<span class="params">sequelize</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.sequelize = sequelize;</span><br><span class="line">&#125;;</span><br><span class="line">         </span><br><span class="line">Base.prototype.define = <span class="function"><span class="keyword">function</span> (<span class="params">model, attributes, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> self = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.sequelize.define(model, _.assign(&#123;</span><br><span class="line">    id: &#123;</span><br><span class="line">      type: Sequelize.UUID,</span><br><span class="line">      primaryKey: <span class="literal">true</span>,</span><br><span class="line">      defaultValue: Sequelize.UUIDV1,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;, attributes), _.defaultsDeep(&#123;</span><br><span class="line">    classMethods: &#123;</span><br><span class="line">      findByIdCache(params, time) &#123;</span><br><span class="line">        <span class="keyword">this</span>.sequelize = self.sequelize;</span><br><span class="line">        <span class="keyword">return</span> baseFind.call(<span class="keyword">this</span>, <span class="string">'findById'</span>, params, time);</span><br><span class="line">      &#125;,</span><br><span class="line">      findOneCache(params, time) &#123;</span><br><span class="line">        <span class="keyword">this</span>.sequelize = self.sequelize;</span><br><span class="line">        <span class="keyword">return</span> baseFind.call(<span class="keyword">this</span>, <span class="string">'findOne'</span>, params, time);</span><br><span class="line">      &#125;,</span><br><span class="line">      findAllCache(params, time) &#123;</span><br><span class="line">        <span class="keyword">this</span>.sequelize = self.sequelize;</span><br><span class="line">        <span class="keyword">return</span> baseFind.call(<span class="keyword">this</span>, <span class="string">'findAll'</span>, params, time);</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;, options));</span><br><span class="line">&#125;;</span><br><span class="line">      </span><br><span class="line"><span class="built_in">module</span>.exports = Base;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码同之前的 mongoBase 的作用大致一样。在 sequelize 建模的时候，所有的 schema 都会继承这个 Base。这个 Base 里面就为所有继承它的 schema 添加了三个静态方法，分别是 findByIdCache、findOneCahe 和 findAllCache，它们的作用和之前 mongoBase 中的那三个方法作用一样，只是为了和 sequelize 中原生的 findAll 保持一致，findCache 在这里变成了 findAllCache。在 sequelize 中为 schema 添加类方法（classMethods），即相当于在 mongoose 中为 schema 添加静态方法（statics)。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mysqlUser.js</span></span><br><span class="line"><span class="keyword">const</span> Sequelize = <span class="built_in">require</span>(<span class="string">'sequelize'</span>);</span><br><span class="line"><span class="keyword">const</span> base = <span class="built_in">require</span>(<span class="string">'./mysqlBase.js'</span>);</span><br><span class="line"><span class="keyword">const</span> sequelize = <span class="built_in">require</span>(<span class="string">'./mysql.js'</span>);</span><br><span class="line">       </span><br><span class="line"><span class="keyword">const</span> Base = <span class="keyword">new</span> base(sequelize);</span><br><span class="line"><span class="built_in">module</span>.exports = Base.define(<span class="string">'user'</span>, &#123;</span><br><span class="line">  name: Sequelize.STRING,</span><br><span class="line">  age: Sequelize.INTEGER,</span><br><span class="line">  addr: Sequelize.STRING,</span><br><span class="line">&#125;, &#123;</span><br><span class="line">  tableName: <span class="string">'user'</span>,</span><br><span class="line">  timestamps: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>上面定义了一个 User schema，它就从 Base 中继承了findByIdCache、findOneCahe 和 findAllCache。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> UserModel = <span class="built_in">require</span>(<span class="string">'./mysqlUser'</span>);</span><br><span class="line">      </span><br><span class="line"><span class="keyword">const</span> action = <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">await</span> UserModel.sync(&#123; <span class="attr">force</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">  <span class="keyword">const</span> user = <span class="keyword">await</span> UserModel.create(&#123; <span class="attr">name</span>: <span class="string">'node'</span>, <span class="attr">age</span>: <span class="number">7</span>, <span class="attr">addr</span>: <span class="string">'nodejs.org'</span> &#125;);</span><br><span class="line">  <span class="keyword">await</span> UserModel.findByIdCache(user.id);</span><br><span class="line">  <span class="keyword">await</span> UserModel.findOneCache(&#123; <span class="attr">where</span>: &#123; <span class="attr">age</span>: <span class="number">7</span> &#125;&#125;);</span><br><span class="line">  <span class="keyword">await</span> UserModel.findAllCache(&#123; <span class="attr">where</span>: &#123; <span class="attr">name</span>: <span class="string">'node'</span>, <span class="attr">age</span>: <span class="number">7</span> &#125;&#125;, <span class="number">7200</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'finish'</span>;</span><br><span class="line">&#125;;</span><br><span class="line">       </span><br><span class="line">action().then(<span class="built_in">console</span>.log).catch(<span class="built_in">console</span>.error);</span><br></pre></td></tr></table></figure></p>
+<p>总结，通过 sequelize 实现的自动缓存方案和之前 mongoose 实现的一样，也会存在数据一致性问题，findByIdCache 较好，findOneCache 和 findAllCache 较差，当然这里很多细节考虑得不够完善，可根据业务合理调整。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+          
+            <a href="/tags/Node-js/" rel="tag"># Node.js</a>
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div class="social_share">
+            
+               <div>
+                 
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+               </div>
+            
+            
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/07/由left-pad扯到JS中的位运算/" rel="next" title="由left-pad扯到JS中的位运算">
+                <i class="fa fa-chevron-left"></i> 由left-pad扯到JS中的位运算
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/07/让Express支持async-await/" rel="prev" title="让Express支持async/await">
+                让Express支持async/await <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://nnblog-storage.b0.upaiyun.com/img/head-photo.jpg"
+                alt="NiuNiu" />
+            
+              <p class="site-author-name" itemprop="name">NiuNiu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/beyond5959" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:liuxin5959@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#在-MongoDB-中实现自动缓存"><span class="nav-number">1.</span> <span class="nav-text">在 MongoDB 中实现自动缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-MySQL-中实现自动缓存"><span class="nav-number">2.</span> <span class="nav-text">在 MySQL 中实现自动缓存</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NiuNiu</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '94nm5fixjUlp8LzggqUjPC2f-gzGzoHsz',
+        appKey: 'zSXJqbi1ShfHJftJlFmH1DMb',
+        placeholder: 'Just go go',
+        avatar:'wavatar',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              Counter('post', '/classes/Counter', JSON.stringify({ title: title, url: url, time: 1}))
+                .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(1);
+                })
+                .fail(function () {
+                  console.log('Failed to create');
+                });
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "94nm5fixjUlp8LzggqUjPC2f-gzGzoHsz")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "94nm5fixjUlp8LzggqUjPC2f-gzGzoHsz",
+                'X-LC-Key': "zSXJqbi1ShfHJftJlFmH1DMb",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
