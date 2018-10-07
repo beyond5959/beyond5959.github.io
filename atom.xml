@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="http://liu-xin.me/"/>
   <updated>2018-10-06T16:04:38.286Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>http://liu-xin.me/</id>
   
   <author>
     <name>NiuNiu</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>用 RabbitMQ 的死信队列来做定时任务</title>
-    <link href="http://yoursite.com/2018/10/05/%E7%94%A8-RabbitMQ-%E7%9A%84%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97%E6%9D%A5%E5%81%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/"/>
-    <id>http://yoursite.com/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/</id>
+    <link href="http://liu-xin.me/2018/10/05/%E7%94%A8-RabbitMQ-%E7%9A%84%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97%E6%9D%A5%E5%81%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/"/>
+    <id>http://liu-xin.me/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/</id>
     <published>2018-10-05T10:26:50.000Z</published>
     <updated>2018-10-06T16:04:38.286Z</updated>
     
@@ -32,14 +32,14 @@
     </summary>
     
     
-      <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
+      <category term="RabbitMQ" scheme="http://liu-xin.me/tags/RabbitMQ/"/>
     
   </entry>
   
   <entry>
     <title>让Express支持async/await</title>
-    <link href="http://yoursite.com/2017/10/07/%E8%AE%A9Express%E6%94%AF%E6%8C%81async-await/"/>
-    <id>http://yoursite.com/2017/10/07/让Express支持async-await/</id>
+    <link href="http://liu-xin.me/2017/10/07/%E8%AE%A9Express%E6%94%AF%E6%8C%81async-await/"/>
+    <id>http://liu-xin.me/2017/10/07/让Express支持async-await/</id>
     <published>2017-10-07T08:25:20.000Z</published>
     <updated>2018-10-06T16:04:38.287Z</updated>
     
@@ -52,16 +52,16 @@
     </summary>
     
     
-      <category term="Node.js" scheme="http://yoursite.com/tags/Node-js/"/>
+      <category term="Node.js" scheme="http://liu-xin.me/tags/Node-js/"/>
     
-      <category term="Express" scheme="http://yoursite.com/tags/Express/"/>
+      <category term="Express" scheme="http://liu-xin.me/tags/Express/"/>
     
   </entry>
   
   <entry>
     <title>让写入数据库的数据自动写入缓存</title>
-    <link href="http://yoursite.com/2017/03/24/%E8%AE%A9%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E5%86%99%E5%85%A5%E7%BC%93%E5%AD%98/"/>
-    <id>http://yoursite.com/2017/03/24/让写入数据库的数据自动写入缓存/</id>
+    <link href="http://liu-xin.me/2017/03/24/%E8%AE%A9%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E5%86%99%E5%85%A5%E7%BC%93%E5%AD%98/"/>
+    <id>http://liu-xin.me/2017/03/24/让写入数据库的数据自动写入缓存/</id>
     <published>2017-03-24T06:56:11.000Z</published>
     <updated>2018-10-06T16:04:38.288Z</updated>
     
@@ -74,20 +74,20 @@
     </summary>
     
     
-      <category term="数据库" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="http://liu-xin.me/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-      <category term="MongoDB" scheme="http://yoursite.com/tags/MongoDB/"/>
+      <category term="MongoDB" scheme="http://liu-xin.me/tags/MongoDB/"/>
     
-      <category term="Node.js" scheme="http://yoursite.com/tags/Node-js/"/>
+      <category term="Node.js" scheme="http://liu-xin.me/tags/Node-js/"/>
     
-      <category term="MySQL" scheme="http://yoursite.com/tags/MySQL/"/>
+      <category term="MySQL" scheme="http://liu-xin.me/tags/MySQL/"/>
     
   </entry>
   
   <entry>
     <title>由left-pad扯到JS中的位运算</title>
-    <link href="http://yoursite.com/2017/01/07/%E7%94%B1left-pad%E6%89%AF%E5%88%B0JS%E4%B8%AD%E7%9A%84%E4%BD%8D%E8%BF%90%E7%AE%97/"/>
-    <id>http://yoursite.com/2017/01/07/由left-pad扯到JS中的位运算/</id>
+    <link href="http://liu-xin.me/2017/01/07/%E7%94%B1left-pad%E6%89%AF%E5%88%B0JS%E4%B8%AD%E7%9A%84%E4%BD%8D%E8%BF%90%E7%AE%97/"/>
+    <id>http://liu-xin.me/2017/01/07/由left-pad扯到JS中的位运算/</id>
     <published>2017-01-07T10:04:12.000Z</published>
     <updated>2018-10-06T16:04:38.287Z</updated>
     
@@ -100,14 +100,14 @@
     </summary>
     
     
-      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://liu-xin.me/tags/JavaScript/"/>
     
   </entry>
   
   <entry>
     <title>通过单元测试为API自动生成文档</title>
-    <link href="http://yoursite.com/2017/01/03/%E9%80%9A%E8%BF%87%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E4%B8%BAAPI%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E6%96%87%E6%A1%A3/"/>
-    <id>http://yoursite.com/2017/01/03/通过单元测试为API自动生成文档/</id>
+    <link href="http://liu-xin.me/2017/01/03/%E9%80%9A%E8%BF%87%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E4%B8%BAAPI%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E6%96%87%E6%A1%A3/"/>
+    <id>http://liu-xin.me/2017/01/03/通过单元测试为API自动生成文档/</id>
     <published>2017-01-03T15:10:26.000Z</published>
     <updated>2018-10-06T16:04:38.288Z</updated>
     
@@ -120,14 +120,14 @@
     </summary>
     
     
-      <category term="doc" scheme="http://yoursite.com/tags/doc/"/>
+      <category term="doc" scheme="http://liu-xin.me/tags/doc/"/>
     
   </entry>
   
   <entry>
     <title>利用redis将log4js产生的日志送到logstash</title>
-    <link href="http://yoursite.com/2016/08/23/%E5%88%A9%E7%94%A8redis%E5%B0%86log4js%E4%BA%A7%E7%94%9F%E7%9A%84%E6%97%A5%E5%BF%97%E9%80%81%E5%88%B0logstash/"/>
-    <id>http://yoursite.com/2016/08/23/利用redis将log4js产生的日志送到logstash/</id>
+    <link href="http://liu-xin.me/2016/08/23/%E5%88%A9%E7%94%A8redis%E5%B0%86log4js%E4%BA%A7%E7%94%9F%E7%9A%84%E6%97%A5%E5%BF%97%E9%80%81%E5%88%B0logstash/"/>
+    <id>http://liu-xin.me/2016/08/23/利用redis将log4js产生的日志送到logstash/</id>
     <published>2016-08-23T08:43:51.000Z</published>
     <updated>2018-10-06T16:04:38.285Z</updated>
     
@@ -141,16 +141,16 @@
     </summary>
     
     
-      <category term="redis" scheme="http://yoursite.com/tags/redis/"/>
+      <category term="redis" scheme="http://liu-xin.me/tags/redis/"/>
     
-      <category term="logstash" scheme="http://yoursite.com/tags/logstash/"/>
+      <category term="logstash" scheme="http://liu-xin.me/tags/logstash/"/>
     
   </entry>
   
   <entry>
     <title>用ELK处理日志时碰到的几个问题</title>
-    <link href="http://yoursite.com/2016/08/16/%E7%94%A8ELK%E5%A4%84%E7%90%86%E6%97%A5%E5%BF%97%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98/"/>
-    <id>http://yoursite.com/2016/08/16/用ELK处理日志时碰到的几个问题/</id>
+    <link href="http://liu-xin.me/2016/08/16/%E7%94%A8ELK%E5%A4%84%E7%90%86%E6%97%A5%E5%BF%97%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98/"/>
+    <id>http://liu-xin.me/2016/08/16/用ELK处理日志时碰到的几个问题/</id>
     <published>2016-08-16T03:50:55.000Z</published>
     <updated>2018-10-06T16:04:38.286Z</updated>
     
@@ -163,24 +163,24 @@
     </summary>
     
     
-      <category term="logstash" scheme="http://yoursite.com/tags/logstash/"/>
+      <category term="logstash" scheme="http://liu-xin.me/tags/logstash/"/>
     
-      <category term="日志" scheme="http://yoursite.com/tags/%E6%97%A5%E5%BF%97/"/>
+      <category term="日志" scheme="http://liu-xin.me/tags/%E6%97%A5%E5%BF%97/"/>
     
-      <category term="ELK" scheme="http://yoursite.com/tags/ELK/"/>
+      <category term="ELK" scheme="http://liu-xin.me/tags/ELK/"/>
     
-      <category term="elasticsearch" scheme="http://yoursite.com/tags/elasticsearch/"/>
+      <category term="elasticsearch" scheme="http://liu-xin.me/tags/elasticsearch/"/>
     
-      <category term="kibana" scheme="http://yoursite.com/tags/kibana/"/>
+      <category term="kibana" scheme="http://liu-xin.me/tags/kibana/"/>
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="http://liu-xin.me/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
   <entry>
     <title>利用Jenkins和Docker做持续集成</title>
-    <link href="http://yoursite.com/2016/07/13/%E5%88%A9%E7%94%A8Jenkins%E5%92%8CDocker%E5%81%9A%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
-    <id>http://yoursite.com/2016/07/13/利用Jenkins和Docker做持续集成/</id>
+    <link href="http://liu-xin.me/2016/07/13/%E5%88%A9%E7%94%A8Jenkins%E5%92%8CDocker%E5%81%9A%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
+    <id>http://liu-xin.me/2016/07/13/利用Jenkins和Docker做持续集成/</id>
     <published>2016-07-13T07:12:16.000Z</published>
     <updated>2018-10-06T16:04:38.284Z</updated>
     
@@ -193,16 +193,16 @@
     </summary>
     
     
-      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
+      <category term="Docker" scheme="http://liu-xin.me/tags/Docker/"/>
     
-      <category term="Jenkins" scheme="http://yoursite.com/tags/Jenkins/"/>
+      <category term="Jenkins" scheme="http://liu-xin.me/tags/Jenkins/"/>
     
   </entry>
   
   <entry>
     <title>初探Docker</title>
-    <link href="http://yoursite.com/2016/07/07/%E5%88%9D%E6%8E%A2Docker/"/>
-    <id>http://yoursite.com/2016/07/07/初探Docker/</id>
+    <link href="http://liu-xin.me/2016/07/07/%E5%88%9D%E6%8E%A2Docker/"/>
+    <id>http://liu-xin.me/2016/07/07/初探Docker/</id>
     <published>2016-07-07T08:57:28.000Z</published>
     <updated>2018-10-06T16:04:38.284Z</updated>
     
@@ -215,14 +215,14 @@
     </summary>
     
     
-      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
+      <category term="Docker" scheme="http://liu-xin.me/tags/Docker/"/>
     
   </entry>
   
   <entry>
     <title>Effective JavaScript（一）</title>
-    <link href="http://yoursite.com/2016/05/14/Effective%20JavaScript%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://yoursite.com/2016/05/14/Effective JavaScript（一）/</id>
+    <link href="http://liu-xin.me/2016/05/14/Effective%20JavaScript%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://liu-xin.me/2016/05/14/Effective JavaScript（一）/</id>
     <published>2016-05-14T12:00:38.000Z</published>
     <updated>2018-10-06T16:04:38.283Z</updated>
     
@@ -235,14 +235,14 @@
     </summary>
     
     
-      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://liu-xin.me/tags/JavaScript/"/>
     
   </entry>
   
   <entry>
     <title>在JavaScript中实现AOP</title>
-    <link href="http://yoursite.com/2016/01/17/%E5%9C%A8JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0AOP/"/>
-    <id>http://yoursite.com/2016/01/17/在JavaScript中实现AOP/</id>
+    <link href="http://liu-xin.me/2016/01/17/%E5%9C%A8JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0AOP/"/>
+    <id>http://liu-xin.me/2016/01/17/在JavaScript中实现AOP/</id>
     <published>2016-01-17T08:57:37.000Z</published>
     <updated>2018-10-06T16:04:38.285Z</updated>
     
@@ -255,16 +255,16 @@
     </summary>
     
     
-      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://liu-xin.me/tags/JavaScript/"/>
     
-      <category term="AOP" scheme="http://yoursite.com/tags/AOP/"/>
+      <category term="AOP" scheme="http://liu-xin.me/tags/AOP/"/>
     
   </entry>
   
   <entry>
     <title>MongoDB中的mapReduce</title>
-    <link href="http://yoursite.com/2015/12/21/MongoDB%E4%B8%AD%E7%9A%84mapReduce/"/>
-    <id>http://yoursite.com/2015/12/21/MongoDB中的mapReduce/</id>
+    <link href="http://liu-xin.me/2015/12/21/MongoDB%E4%B8%AD%E7%9A%84mapReduce/"/>
+    <id>http://liu-xin.me/2015/12/21/MongoDB中的mapReduce/</id>
     <published>2015-12-21T07:46:09.000Z</published>
     <updated>2018-10-06T16:04:38.283Z</updated>
     
@@ -277,18 +277,18 @@
     </summary>
     
     
-      <category term="数据库" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="http://liu-xin.me/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-      <category term="NoSQL" scheme="http://yoursite.com/tags/NoSQL/"/>
+      <category term="NoSQL" scheme="http://liu-xin.me/tags/NoSQL/"/>
     
-      <category term="MongoDB" scheme="http://yoursite.com/tags/MongoDB/"/>
+      <category term="MongoDB" scheme="http://liu-xin.me/tags/MongoDB/"/>
     
   </entry>
   
   <entry>
     <title>yield和yield*</title>
-    <link href="http://yoursite.com/2015/12/18/yield%E5%92%8Cyield/"/>
-    <id>http://yoursite.com/2015/12/18/yield和yield/</id>
+    <link href="http://liu-xin.me/2015/12/18/yield%E5%92%8Cyield/"/>
+    <id>http://liu-xin.me/2015/12/18/yield和yield/</id>
     <published>2015-12-18T08:29:52.000Z</published>
     <updated>2018-10-06T16:04:38.284Z</updated>
     
@@ -301,16 +301,16 @@
     </summary>
     
     
-      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://liu-xin.me/tags/JavaScript/"/>
     
-      <category term="Node.js" scheme="http://yoursite.com/tags/Node-js/"/>
+      <category term="Node.js" scheme="http://liu-xin.me/tags/Node-js/"/>
     
   </entry>
   
   <entry>
     <title>SQL成长记</title>
-    <link href="http://yoursite.com/2015/11/19/SQL%E6%88%90%E9%95%BF%E8%AE%B0/"/>
-    <id>http://yoursite.com/2015/11/19/SQL成长记/</id>
+    <link href="http://liu-xin.me/2015/11/19/SQL%E6%88%90%E9%95%BF%E8%AE%B0/"/>
+    <id>http://liu-xin.me/2015/11/19/SQL成长记/</id>
     <published>2015-11-19T02:45:40.000Z</published>
     <updated>2018-10-06T16:04:38.283Z</updated>
     
@@ -323,16 +323,16 @@
     </summary>
     
     
-      <category term="数据库" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="http://liu-xin.me/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-      <category term="SQL" scheme="http://yoursite.com/tags/SQL/"/>
+      <category term="SQL" scheme="http://liu-xin.me/tags/SQL/"/>
     
   </entry>
   
   <entry>
     <title>在Redis中进行分页排序查询</title>
-    <link href="http://yoursite.com/2015/11/17/%E5%9C%A8Redis%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%88%86%E9%A1%B5%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2/"/>
-    <id>http://yoursite.com/2015/11/17/在Redis中进行分页排序查询/</id>
+    <link href="http://liu-xin.me/2015/11/17/%E5%9C%A8Redis%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%88%86%E9%A1%B5%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2/"/>
+    <id>http://liu-xin.me/2015/11/17/在Redis中进行分页排序查询/</id>
     <published>2015-11-17T07:35:01.000Z</published>
     <updated>2018-10-06T16:04:38.286Z</updated>
     
@@ -345,18 +345,18 @@
     </summary>
     
     
-      <category term="数据库" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="http://liu-xin.me/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-      <category term="NoSQL" scheme="http://yoursite.com/tags/NoSQL/"/>
+      <category term="NoSQL" scheme="http://liu-xin.me/tags/NoSQL/"/>
     
-      <category term="Redis" scheme="http://yoursite.com/tags/Redis/"/>
+      <category term="Redis" scheme="http://liu-xin.me/tags/Redis/"/>
     
   </entry>
   
   <entry>
     <title>JavaScript中的this</title>
-    <link href="http://yoursite.com/2015/11/16/JavaScript%E4%B8%AD%E7%9A%84this/"/>
-    <id>http://yoursite.com/2015/11/16/JavaScript中的this/</id>
+    <link href="http://liu-xin.me/2015/11/16/JavaScript%E4%B8%AD%E7%9A%84this/"/>
+    <id>http://liu-xin.me/2015/11/16/JavaScript中的this/</id>
     <published>2015-11-16T02:17:01.000Z</published>
     <updated>2018-10-06T16:04:38.283Z</updated>
     
@@ -369,16 +369,16 @@
     </summary>
     
     
-      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://liu-xin.me/tags/JavaScript/"/>
     
-      <category term="this" scheme="http://yoursite.com/tags/this/"/>
+      <category term="this" scheme="http://liu-xin.me/tags/this/"/>
     
   </entry>
   
   <entry>
     <title> 这个博客怎么搭建的？</title>
-    <link href="http://yoursite.com/2015/11/15/%E8%BF%99%E4%B8%AA%E5%8D%9A%E5%AE%A2%E6%80%8E%E4%B9%88%E6%90%AD%E5%BB%BA%E7%9A%84%EF%BC%9F/"/>
-    <id>http://yoursite.com/2015/11/15/这个博客怎么搭建的？/</id>
+    <link href="http://liu-xin.me/2015/11/15/%E8%BF%99%E4%B8%AA%E5%8D%9A%E5%AE%A2%E6%80%8E%E4%B9%88%E6%90%AD%E5%BB%BA%E7%9A%84%EF%BC%9F/"/>
+    <id>http://liu-xin.me/2015/11/15/这个博客怎么搭建的？/</id>
     <published>2015-11-15T08:24:31.000Z</published>
     <updated>2018-10-06T16:04:38.288Z</updated>
     
@@ -391,11 +391,11 @@
     </summary>
     
     
-      <category term="Github Pages" scheme="http://yoursite.com/tags/Github-Pages/"/>
+      <category term="Github Pages" scheme="http://liu-xin.me/tags/Github-Pages/"/>
     
-      <category term="GoDaddy" scheme="http://yoursite.com/tags/GoDaddy/"/>
+      <category term="GoDaddy" scheme="http://liu-xin.me/tags/GoDaddy/"/>
     
-      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
+      <category term="Hexo" scheme="http://liu-xin.me/tags/Hexo/"/>
     
   </entry>
   

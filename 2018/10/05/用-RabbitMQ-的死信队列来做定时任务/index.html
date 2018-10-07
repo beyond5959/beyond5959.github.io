@@ -123,7 +123,7 @@
 <meta name="keywords" content="RabbitMQ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用 RabbitMQ 的死信队列来做定时任务">
-<meta property="og:url" content="http://yoursite.com/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/index.html">
+<meta property="og:url" content="http://liu-xin.me/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/index.html">
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
 <meta property="og:description" content="在开发中做定时任务是一个非常常见的业务场景，在代码层面 Node.js 可以用 setTimeout、setInerval 这种基础语法或用 node-schedule 这些类似的库来达到部分目的，在第三方服务上可以用 Redis 的 Keyspace Notification 或 Linux 自身的 crontab 来做定时任务。RabbitMQ 作为一个消息中间件，使用其死信队列也可以达到做定">
 <meta property="og:locale" content="zh-CN">
@@ -144,7 +144,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/"/>
+  <link rel="canonical" href="http://liu-xin.me/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/"/>
 
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/">
+    <link itemprop="mainEntityOfPage" href="http://liu-xin.me/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="NiuNiu">
@@ -471,6 +471,20 @@
 
     
 
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>NiuNiu</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://liu-xin.me/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/" title="用 RabbitMQ 的死信队列来做定时任务">http://liu-xin.me/2018/10/05/用-RabbitMQ-的死信队列来做定时任务/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -917,7 +931,7 @@
     new Valine({
         el: '#comments' ,
         verify: false,
-        notify: false,
+        notify: true,
         appId: '94nm5fixjUlp8LzggqUjPC2f-gzGzoHsz',
         appKey: 'zSXJqbi1ShfHJftJlFmH1DMb',
         placeholder: 'Just go go',
