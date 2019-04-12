@@ -119,19 +119,19 @@
 
 
 
-  <meta name="description" content="本站是一个静态的个人博客网站，托管在Github Pages上面。">
+  <meta name="description" content="本站是一个静态的个人博客网站，托管在 Github Pages 上面。">
 <meta name="keywords" content="Github Pages,GoDaddy,Hexo">
 <meta property="og:type" content="article">
 <meta property="og:title" content=" 这个博客怎么搭建的？">
 <meta property="og:url" content="http://liu-xin.me/2015/11/15/这个博客怎么搭建的？/index.html">
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
-<meta property="og:description" content="本站是一个静态的个人博客网站，托管在Github Pages上面。">
+<meta property="og:description" content="本站是一个静态的个人博客网站，托管在 Github Pages 上面。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://nnblog-storage.b0.upaiyun.com/img/godaddyDNS.png">
-<meta property="og:updated_time" content="2018-10-06T16:04:38.288Z">
+<meta property="og:updated_time" content="2019-04-12T03:27:33.038Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=" 这个博客怎么搭建的？">
-<meta name="twitter:description" content="本站是一个静态的个人博客网站，托管在Github Pages上面。">
+<meta name="twitter:description" content="本站是一个静态的个人博客网站，托管在 Github Pages 上面。">
 <meta name="twitter:image" content="http://nnblog-storage.b0.upaiyun.com/img/godaddyDNS.png">
 
 
@@ -441,13 +441,13 @@
       
 
       
-        <p>本站是一个静态的个人博客网站，托管在<a href="https://pages.github.com" target="_blank" rel="noopener">Github Pages</a>上面。<br><a id="more"></a></p>
-<h2 id="Github-Pages"><a href="#Github-Pages" class="headerlink" title="Github Pages"></a>Github Pages</h2><p>要想使用Github Pages服务，则需要在<a href="https://github.com" target="_blank" rel="noopener">Github</a>上创建一个与自己用户名有关的仓库（当然，得先有Github账号），如用户名若为niuniu，则创建的仓库名称应为niuniu.github.io。</p>
-<h2 id="GoDaddy"><a href="#GoDaddy" class="headerlink" title="GoDaddy"></a>GoDaddy</h2><p>liu-xin.me这个域名是在<a href="https://www.godaddy.com/" target="_blank" rel="noopener">GoDaddy</a>上申请的。申请完后如果想要通过自己的域名访问在Github上创建的仓库，则需要配置一下域名的DNS，我的配置如下图：</p>
+        <p>本站是一个静态的个人博客网站，托管在 <a href="https://pages.github.com" target="_blank" rel="noopener">Github Pages</a> 上面。<br><a id="more"></a></p>
+<h2 id="Github-Pages"><a href="#Github-Pages" class="headerlink" title="Github Pages"></a>Github Pages</h2><p>要想使用 Github Pages 服务，则需要在 <a href="https://github.com" target="_blank" rel="noopener">Github</a> 上创建一个与自己用户名有关的仓库（当然，得先有 Github 账号），如用户名若为 niuniu，则创建的仓库名称应为 niuniu.github.io。</p>
+<h2 id="GoDaddy"><a href="#GoDaddy" class="headerlink" title="GoDaddy"></a>GoDaddy</h2><p>liu-xin.me 这个域名是在 <a href="https://www.godaddy.com/" target="_blank" rel="noopener">GoDaddy</a> 上申请的。申请完后如果想要通过自己的域名访问在Github上创建的仓库，则需要配置一下域名的 DNS 解析，DNS 解析所需要的 IP 地址可以在<a href="https://help.github.com/en/articles/setting-up-an-apex-domain#configuring-a-records-with-your-dns-provider" target="_blank" rel="noopener">这里</a>找到，可以选择其中任意一个 IP 作为解析地址。我的配置如下图：</p>
 <p><img src="http://nnblog-storage.b0.upaiyun.com/img/godaddyDNS.png" alt="域名的DNS配置"></p>
-<p>当然到这里还不够，还需要在Github仓库里创建一个名为CNAME的文件，CNAME文件里的内容为申请的域名，我的CNAME文件里的内容就为liu-xin.me。</p>
-<p>除此之外，仓库里面还需要一个index.html文件，在index.html中通过HTML语言编辑好自己想要的内容后，然后访问自己的域名就可以看到自己编辑的东西了。</p>
-<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>本站采用<a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>，这里不对Hexo作详细的介绍，需要注意的是当把自己的博客部署到Github上时，需要把CNAME文件放到通过Hexo生成的工程的source目录下，如果需要README.md文件也需要将该文件放在source目录下，并在工程的_config.yml文件中增加skip_render: README.md的配置。</p>
+<p>当然到这里还不够，还需要在 Github 仓库里创建一个名为 CNAME 的文件，CNAME 文件里的内容为申请的域名，我的 CNAME 文件里的内容就为 liu-xin.me。</p>
+<p>除此之外，仓库里面还需要一个 index.html 文件，在 index.html 中通过 HTML 编辑好自己想要的内容后，然后访问自己的域名就可以看到自己编辑的东西了。</p>
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>本站采用 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>，这里不对 Hexo 作详细的介绍，需要注意的是当把自己的博客部署到 Github 上时，需要把 CNAME 文件放到通过 Hexo 生成的工程的 source 目录下，如果需要 README.md 文件也需要将该文件放在 source 目录下，并在工程的 _config.yml 文件中增加 <code>skip_render: README.md</code> 的配置。</p>
 
       
     </div>
