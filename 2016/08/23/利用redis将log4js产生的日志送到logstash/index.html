@@ -78,7 +78,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="http://nnblog-storage.b0.upaiyun.com/img/favicon.ico?v=6.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://nnblog-storage.b0.aicdn.com/img/favicon.ico?v=6.4.2">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
@@ -127,12 +127,12 @@
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
 <meta property="og:description" content="在用Node.js开发项目的时候，我们常用 log4js 模块来进行日志的记录，可以通过配置 log4js 的 Appenders 将日志输出到Console、File和GELF等不同的地方。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://nnblog-storage.b0.upaiyun.com/img/log4js-logstash-redis.png!watermark1.0">
-<meta property="og:updated_time" content="2018-10-06T16:04:38.285Z">
+<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/log4js-logstash-redis.png!watermark1.0">
+<meta property="og:updated_time" content="2019-08-28T16:02:32.066Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用redis将log4js产生的日志送到logstash">
 <meta name="twitter:description" content="在用Node.js开发项目的时候，我们常用 log4js 模块来进行日志的记录，可以通过配置 log4js 的 Appenders 将日志输出到Console、File和GELF等不同的地方。">
-<meta name="twitter:image" content="http://nnblog-storage.b0.upaiyun.com/img/log4js-logstash-redis.png!watermark1.0">
+<meta name="twitter:image" content="http://nnblog-storage.b0.aicdn.com/img/log4js-logstash-redis.png!watermark1.0">
 
 
 
@@ -441,7 +441,7 @@
       
 
       
-        <p><img src="http://nnblog-storage.b0.upaiyun.com/img/log4js-logstash-redis.png!watermark1.0" alt="log4js-logstash-redis"></p>
+        <p><img src="http://nnblog-storage.b0.aicdn.com/img/log4js-logstash-redis.png!watermark1.0" alt="log4js-logstash-redis"></p>
 <p>在用Node.js开发项目的时候，我们常用 <a href="https://www.npmjs.com/package/log4js" target="_blank" rel="noopener">log4js</a> 模块来进行日志的记录，可以通过配置 log4js 的 <a href="https://github.com/nomiddlename/log4js-node/wiki/Appenders" target="_blank" rel="noopener">Appenders</a> 将日志输出到Console、File和GELF等不同的地方。<br><a id="more"></a></p>
 <h2 id="logstash"><a href="#logstash" class="headerlink" title="logstash"></a>logstash</h2><p>logstash 是 <a href="https://www.elastic.co/" target="_blank" rel="noopener">elastic</a> 技术栈的其中一员，常被用来收集和解析日志。一种比较常见的做法就是在项目工程中把日志写入到日志文件中，然后用 logstash 读取和解析日志文件。比如在 Node.js 项目中，若要将日志记录到文件中，只需对 log4js 做如下配置即可：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> log4js = <span class="built_in">require</span>(<span class="string">'log4js'</span>);</span><br><span class="line">log4js.configure(&#123;</span><br><span class="line">  appenders: [&#123;</span><br><span class="line">    type: <span class="string">'file'</span>,</span><br><span class="line">    filename: <span class="string">'./example.log'</span></span><br><span class="line">  &#125;]</span><br><span class="line">&#125;);</span><br><span class="line">        </span><br><span class="line"><span class="keyword">const</span> logger = log4js.getLogger();</span><br><span class="line">logger.info(<span class="string">'hello'</span>);</span><br></pre></td></tr></table></figure></p>
 <p>这样日志就会被记录到 <code>example.log</code> 文件中，然后再对 logstash 的 input 做如下配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">file &#123;</span><br><span class="line">    path =&gt; &quot;YourLogPath/example.log&quot;</span><br><span class="line">    start_position =&gt; &quot;beginning&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>

@@ -78,7 +78,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="http://nnblog-storage.b0.upaiyun.com/img/favicon.ico?v=6.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://nnblog-storage.b0.aicdn.com/img/favicon.ico?v=6.4.2">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
@@ -127,13 +127,13 @@
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
 <meta property="og:description" content="这个话题的由来是2016年3月份的时候 NPM 社区发生了‘left-pad’事件，不久后社区就有人发布了用来补救的，也是现在大家能用到的 left-pad 库。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://nnblog-storage.b0.upaiyun.com/img/2to10.gif">
-<meta property="og:image" content="http://nnblog-storage.b0.upaiyun.com/img/2to10.png">
-<meta property="og:updated_time" content="2018-10-06T16:04:38.287Z">
+<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/2to10.gif">
+<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/2to10.png">
+<meta property="og:updated_time" content="2019-08-28T16:02:32.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="由left-pad扯到JS中的位运算">
 <meta name="twitter:description" content="这个话题的由来是2016年3月份的时候 NPM 社区发生了‘left-pad’事件，不久后社区就有人发布了用来补救的，也是现在大家能用到的 left-pad 库。">
-<meta name="twitter:image" content="http://nnblog-storage.b0.upaiyun.com/img/2to10.gif">
+<meta name="twitter:image" content="http://nnblog-storage.b0.aicdn.com/img/2to10.gif">
 
 
 
@@ -457,10 +457,10 @@
 <p>可见对于负数，补码的表示方式也是让人无法直观看出其数值的，通常也需要转换成原码再计算。</p>
 <h3 id="二进制与十进制的转换"><a href="#二进制与十进制的转换" class="headerlink" title="二进制与十进制的转换"></a>二进制与十进制的转换</h3><p>二进制与十进制的区别在于数运算时是逢几进一位。二进制是逢2进一位，十进制也就是我们常用的0-9是逢10进一位</p>
 <h4 id="正整数的十进制转二进制"><a href="#正整数的十进制转二进制" class="headerlink" title="正整数的十进制转二进制"></a>正整数的十进制转二进制</h4><p>正整数的十进制转二进制的方法为将一个十进制数除以2，得到的商再除以2，以此类推直到商等于1或0时为止，倒取除得的余数，即为转换所得的二进制数的结果。</p>
-<p>例如把52换算成二进制数，计算过程如下图：<br><img src="http://nnblog-storage.b0.upaiyun.com/img/2to10.gif" alt="10to2"><br>52除以2得到的余数依次为：0、0、1、0、1、1，倒序排列，所以52对应的二进制数就是110100。</p>
+<p>例如把52换算成二进制数，计算过程如下图：<br><img src="http://nnblog-storage.b0.aicdn.com/img/2to10.gif" alt="10to2"><br>52除以2得到的余数依次为：0、0、1、0、1、1，倒序排列，所以52对应的二进制数就是110100。</p>
 <h4 id="负整数的十进制转二进制"><a href="#负整数的十进制转二进制" class="headerlink" title="负整数的十进制转二进制"></a>负整数的十进制转二进制</h4><p>负整数的十进制转二进制为将该负整数对应的正整数先转换成二进制，然后对其“取反”，再对取反后的结果+1。即负整数采用其二进制补码的形式存储。<br>至于负数为什么要用二进制补码的形式存储，可参考一篇阮一峰的文章《<a href="http://www.ruanyifeng.com/blog/2009/08/twos_complement.html" target="_blank" rel="noopener">关于2的补码</a>》。<br>例如 -52 的原码为 10110100，其反码为 11001011，其补码为 11001100。所以 -52 转换为二进制后为 11001100。</p>
 <h4 id="十进制小数转二进制"><a href="#十进制小数转二进制" class="headerlink" title="十进制小数转二进制"></a>十进制小数转二进制</h4><p>十进制小数转二进制的方法为“乘2取整”，对十进制小数乘2得到的整数部分和小数部分，整数部分即是相应的二进制数码，再用2乘小数部分(之前乘后得到新的小数部分)，又得到整数和小数部分。<br>如此不断重复，直到小数部分为0或达到精度要求为止。第一次所得到为最高位，最后一次得到为最低位。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">如:0.25的二进制</span><br><span class="line">0.25*2=0.5 取整是0</span><br><span class="line">0.5*2=1.0    取整是1</span><br><span class="line">即0.25的二进制为 0.01 ( 第一次所得到为最高位,最后一次得到为最低位)</span><br><span class="line">   </span><br><span class="line">0.8125的二进制</span><br><span class="line">0.8125*2=1.625   取整是1</span><br><span class="line">0.625*2=1.25     取整是1</span><br><span class="line">0.25*2=0.5       取整是0</span><br><span class="line">0.5*2=1.0        取整是1</span><br><span class="line">即0.8125的二进制是0.1101</span><br></pre></td></tr></table></figure></p>
-<h4 id="二进制转十进制"><a href="#二进制转十进制" class="headerlink" title="二进制转十进制"></a>二进制转十进制</h4><p>从最后一位开始算，依次列为第0、1、2…位，第n位的数（0或1）乘以2的n次方，将得到的结果相加就是得到的十进制数。<br>例如二进制为110的数，将其转为十进制的过程如下<br><img src="http://nnblog-storage.b0.upaiyun.com/img/2to10.png" alt="2to10"><br>个位数 0 与 2º 相乘：0 × 2º = 0<br>十位数 1 与 2¹ 相乘：1 × 2¹ = 2<br>百位数 1 与 2² 相乘：1 × 2² = 4<br>将得到的结果相加：0+2+4=6<br>所以二进制 110 转换为十进制后的数值为 6。</p>
+<h4 id="二进制转十进制"><a href="#二进制转十进制" class="headerlink" title="二进制转十进制"></a>二进制转十进制</h4><p>从最后一位开始算，依次列为第0、1、2…位，第n位的数（0或1）乘以2的n次方，将得到的结果相加就是得到的十进制数。<br>例如二进制为110的数，将其转为十进制的过程如下<br><img src="http://nnblog-storage.b0.aicdn.com/img/2to10.png" alt="2to10"><br>个位数 0 与 2º 相乘：0 × 2º = 0<br>十位数 1 与 2¹ 相乘：1 × 2¹ = 2<br>百位数 1 与 2² 相乘：1 × 2² = 4<br>将得到的结果相加：0+2+4=6<br>所以二进制 110 转换为十进制后的数值为 6。</p>
 <p>小数二进制用数值乘以2的负幂次然后相加。</p>
 <h3 id="JavaScript-中的位运算"><a href="#JavaScript-中的位运算" class="headerlink" title="JavaScript 中的位运算"></a>JavaScript 中的位运算</h3><p>在 ECMAScript 中按位操作符会将其操作数转成<strong>补码形式的有符号32位整数。</strong>下面是<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators-runtime-semantics-evaluation" target="_blank" rel="noopener">ECMAScript 规格</a>中对于位运算的执行过程的表述：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">The production A : A @ B, where @ is one of the bitwise operators in the productions above, is evaluated as follows:</span><br><span class="line">1. Let lref be the result of evaluating A.</span><br><span class="line">2. Let lval be GetValue(lref).</span><br><span class="line">3. ReturnIfAbrupt(lval).</span><br><span class="line">4. Let rref be the result of evaluating B.</span><br><span class="line">5. Let rval be GetValue(rref).</span><br><span class="line">6. ReturnIfAbrupt(rval).</span><br><span class="line">7. Let lnum be ToInt32(lval).</span><br><span class="line">8. ReturnIfAbrupt(lnum).</span><br><span class="line">9. Let rnum be ToInt32(rval).</span><br><span class="line">10. ReturnIfAbrupt(rnum).</span><br><span class="line">11. Return the result of applying the bitwise operator @ to lnum and rnum. The result is a signed 32 bit integer.</span><br></pre></td></tr></table></figure></p>
 <p>需要注意的是第七步和第九步，根据 ES 的标准，超过32位的整数会被截断，而小数部分则会被直接舍弃。所以由此可以知道，在 JS 中，当位运算中有操作数大于或等于2³²时，就会出现意想不到的结果。</p>
