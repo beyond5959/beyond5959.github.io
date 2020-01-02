@@ -2,28 +2,22 @@ name: Create Release
 
 on: 
   push:
-    branches:
-      - master
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-#       - name: Set up Go 1.13
-#         uses: actions/setup-go@v1
-#         with:
-#           go-version: 1.13
-#         id: go
-
       - name: Check out source code
         uses: actions/checkout@master
 
-      - name: Generate build number
-        id: buildnumber
-        uses: einaregilsson/build-number@v2 
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
+#       - name: Generate build number
+#         id: buildnumber
+#         uses: einaregilsson/build-number@v2 
+#         with:
+#           token: ${{secrets.GITHUB_TOKEN}}
         
       - name: Create Release
         id: create_release
@@ -31,8 +25,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ steps.buildnumber.outputs.build_number }}
-          release_name: ${{ steps.buildnumber.outputs.build_number }}
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
           body: |
             Changes in this Release
             - First Change
