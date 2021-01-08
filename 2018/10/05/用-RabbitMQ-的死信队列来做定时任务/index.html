@@ -127,13 +127,13 @@
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
 <meta property="og:description" content="在开发中做定时任务是一个非常常见的业务场景，在代码层面 Node.js 可以用 setTimeout、setInerval 这种基础语法或用 node-schedule 这些类似的库来达到部分目的，在第三方服务上可以用 Redis 的 Keyspace Notification 或 Linux 自身的 crontab 来做定时任务。RabbitMQ 作为一个消息中间件，使用其死信队列也可以达到做定">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/rabbitmq-1.png">
-<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/dead-letter.png">
-<meta property="og:updated_time" content="2019-08-28T16:02:32.066Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/rabbitmq-1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/dead-letter.png">
+<meta property="og:updated_time" content="2021-01-08T15:05:27.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用 RabbitMQ 的死信队列来做定时任务">
 <meta name="twitter:description" content="在开发中做定时任务是一个非常常见的业务场景，在代码层面 Node.js 可以用 setTimeout、setInerval 这种基础语法或用 node-schedule 这些类似的库来达到部分目的，在第三方服务上可以用 Redis 的 Keyspace Notification 或 Linux 自身的 crontab 来做定时任务。RabbitMQ 作为一个消息中间件，使用其死信队列也可以达到做定">
-<meta name="twitter:image" content="http://nnblog-storage.b0.aicdn.com/img/rabbitmq-1.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/rabbitmq-1.png">
 
 
 
@@ -350,7 +350,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="NiuNiu">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://nnblog-storage.b0.aicdn.com/img/head-photo.jpg">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/head-photo.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -443,7 +443,7 @@
 
       
         <p>在开发中做定时任务是一个非常常见的业务场景，在代码层面 Node.js 可以用 setTimeout、setInerval 这种基础语法或用 <a href="https://www.npmjs.com/package/node-schedule" target="_blank" rel="noopener">node-schedule</a> 这些类似的库来达到部分目的，在第三方服务上可以用 Redis 的 Keyspace Notification 或 Linux 自身的 crontab 来做定时任务。RabbitMQ 作为一个消息中间件，使用其死信队列也可以达到做定时任务的目的。<a id="more"></a></p>
-<p><img src="http://nnblog-storage.b0.aicdn.com/img/rabbitmq-1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/rabbitmq-1.png" alt=""></p>
 <p>本文以 Node.js 作为演示语言，操作 RabbitMQ 使用的是 <a href="https://www.npmjs.com/package/amqplib" target="_blank" rel="noopener">amqplib</a>。</p>
 <h3 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h3><p>RabbitMQ 中有一种交换器叫 DLX，全称为 Dead-Letter-Exchange，可以称之为死信交换器。当消息在一个队列中变成死信（dead message）之后，它会被重新发送到另外一个交换器中，这个交换器就是 DLX，绑定在 DLX 上的队列就称之为死信队列。<br>消息变成死信一般是以下几种情况：</p>
 <ul>
@@ -459,7 +459,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> amqp = <span class="built_in">require</span>(<span class="string">'amqplib'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myNormalEx = <span class="string">'my_normal_exchange'</span>;</span><br><span class="line"><span class="keyword">const</span> myNormalQueue = <span class="string">'my_normal_queue'</span>;</span><br><span class="line"><span class="keyword">const</span> myDeadLetterEx = <span class="string">'my_dead_letter_exchange'</span>;</span><br><span class="line"><span class="keyword">const</span> myDeadLetterRoutingKey = <span class="string">'my_dead_letter_routing_key'</span>;</span><br><span class="line"><span class="keyword">let</span> connection, channel;</span><br><span class="line">amqp.connect(<span class="string">'amqp://localhost'</span>)</span><br><span class="line">  .then(<span class="function">(<span class="params">conn</span>) =&gt;</span> &#123;</span><br><span class="line">    connection = conn;</span><br><span class="line">    <span class="keyword">return</span> conn.createChannel();</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function">(<span class="params">ch</span>) =&gt;</span> &#123;</span><br><span class="line">    channel = ch;</span><br><span class="line">    ch.assertExchange(myNormalEx, <span class="string">'direct'</span>, &#123; <span class="attr">durable</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">    <span class="keyword">return</span> ch.assertQueue(myNormalQueue, &#123;</span><br><span class="line">      exclusive: <span class="literal">false</span>,</span><br><span class="line">      deadLetterExchange: myDeadLetterEx,</span><br><span class="line">      deadLetterRoutingKey: myDeadLetterRoutingKey,</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br><span class="line">  .then(<span class="function">(<span class="params">ok</span>) =&gt;</span> &#123;</span><br><span class="line">    channel.bindQueue(ok.queue, myNormalEx);</span><br><span class="line">    channel.sendToQueue(ok.queue, Buffer.from(<span class="string">'hello'</span>), &#123; <span class="attr">expiration</span>: <span class="string">'4000'</span>&#125;);</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; connection.close(); process.exit(<span class="number">0</span>) &#125;, <span class="number">500</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  .catch(<span class="built_in">console</span>.error);</span><br></pre></td></tr></table></figure>
 <p>上面的代码在向队列发送消息的时候，通过传递 <code>{ expiration: &#39;4000&#39;}</code> 将这条消息的过期时间设为了4秒，对消息设置4秒钟过期，这条消息并不一定就会在4秒钟后被丢弃或进入死信，只有当这条消息到达队首即将被消费时才会判断其是否过期，若未过期就会被消费者消费，若已过期就会被删除或者成为死信。</p>
 <h3 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h3><p>因为队列中的消息过期后会成为死信，而死信又会被发布到该消息所在的队列的 DLX 上去，<strong>所以通过为消息设置过期时间，然后再消费该消息所在队列的 DLX 所绑定的队列，从而来达到定时处理一个任务的目的。</strong> 简单的讲就是当有一个队列 queue1，其 DLX 为 deadEx1，deadEx1 绑定了一个队列 deadQueue1，当队列 queue1 中有一条消息因过期成为死信时，就会被发布到 deadEx1 中去，通过消费队列 deadQueue1 中的消息，也就相当于消费的是 queue1 中的因过期产生的死信消息。</p>
-<p><img src="http://nnblog-storage.b0.aicdn.com/img/dead-letter.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/dead-letter.png" alt=""></p>
 <p>消费死信队列的代码如下：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> amqp = <span class="built_in">require</span>(<span class="string">'amqplib'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myDeadLetterEx = <span class="string">'my_dead_letter_exchange'</span>;</span><br><span class="line"><span class="keyword">const</span> myDeadLetterQueue = <span class="string">'my_dead_letter_queue'</span>;</span><br><span class="line"><span class="keyword">const</span> myDeadLetterRoutingKey = <span class="string">'my_dead_letter_routing_key'</span>;</span><br><span class="line"><span class="keyword">let</span> channel;</span><br><span class="line">amqp.connect(<span class="string">'amqp://localhost'</span>)</span><br><span class="line">.then(<span class="function">(<span class="params">conn</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> conn.createChannel();</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function">(<span class="params">ch</span>) =&gt;</span> &#123;</span><br><span class="line">  channel = ch;</span><br><span class="line">  ch.assertExchange(myDeadLetterEx, <span class="string">'direct'</span>, &#123; <span class="attr">durable</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">  <span class="keyword">return</span> ch.assertQueue(myDeadLetterQueue, &#123; <span class="attr">exclusive</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function">(<span class="params">ok</span>) =&gt;</span> &#123;</span><br><span class="line">  channel.bindQueue(ok.queue, myDeadLetterEx, myDeadLetterRoutingKey);</span><br><span class="line">  channel.consume(ok.queue, (msg) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">" [x] %s: '%s'"</span>, msg.fields.routingKey, msg.content.toString());</span><br><span class="line">  &#125;, &#123; <span class="attr">noAck</span>: <span class="literal">true</span>&#125;)</span><br><span class="line">&#125;)</span><br><span class="line">.catch(<span class="built_in">console</span>.error);</span><br></pre></td></tr></table></figure>
 <p>这里需要注意的是，如果声明的 <code>myDeadLetterEx</code> 是 direct 类型，那么在为其绑定队列的时候一定要指定 BindingKey，即这里的 <code>myDeadLetterRoutingKey</code>，如果不指定 Bindingkey，则需要将 <code>myDeadLetterEx</code> 声明为 fanout 类型。</p>
@@ -585,7 +585,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://nnblog-storage.b0.aicdn.com/img/head-photo.jpg"
+                src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/head-photo.jpg"
                 alt="NiuNiu" />
             
               <p class="site-author-name" itemprop="name">NiuNiu</p>
@@ -749,7 +749,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

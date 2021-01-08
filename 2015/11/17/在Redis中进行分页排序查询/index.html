@@ -127,12 +127,12 @@
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
 <meta property="og:description" content="Redis是一个高效的内存数据库，它支持包括String、List、Set、SortedSet和Hash等数据类型的存储，在Redis中通常根据数据的key查询其value值，Redis没有条件查询，在面对一些需要分页或排序的场景时（如评论，时间线），Redis就不太好不处理了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/redis.png!watermark1.0">
-<meta property="og:updated_time" content="2019-08-28T16:02:32.065Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/redis.png">
+<meta property="og:updated_time" content="2021-01-08T15:08:30.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Redis中进行分页排序查询">
 <meta name="twitter:description" content="Redis是一个高效的内存数据库，它支持包括String、List、Set、SortedSet和Hash等数据类型的存储，在Redis中通常根据数据的key查询其value值，Redis没有条件查询，在面对一些需要分页或排序的场景时（如评论，时间线），Redis就不太好不处理了。">
-<meta name="twitter:image" content="http://nnblog-storage.b0.aicdn.com/img/redis.png!watermark1.0">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/redis.png">
 
 
 
@@ -349,7 +349,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="NiuNiu">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://nnblog-storage.b0.aicdn.com/img/head-photo.jpg">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/head-photo.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -449,7 +449,7 @@
 <p><strong>String: </strong>主要用于存储字符串，显然不支持分页和排序。<br><strong>Hash: </strong>主要用于存储key-value型数据，评论模型中全是key-value型数据，所以在这里Hash无疑会用到。<br><strong>List: </strong>主要用于存储一个列表，列表中的每一个元素按元素的插入时的顺序进行保存，如果我们将评论模型按createDate排好序后再插入List中，似乎就能做到排序了，而且再利用List中的LRANGE key start stop指令还能做到分页。嗯，到这里List似乎满足了我们分页和排序的要求，但是评论还会被删除，就需要更新Redis中的数据，如果每次删除评论后都将Redis中的数据全部重新写入一次，显然不够优雅，效率也会大打折扣，如果能删除指定的数据无疑会更好，而List中涉及到删除数据的就只有LPOP和RPOP这两条指令，但LPOP和RPOP只能删除列表头和列表尾的数据，不能删除指定位置的数据，所以List也不太适合。<br><strong>Set: </strong>主要存储无序集合，无序！排除。<br><strong>SortedSet: </strong>主要存储有序集合，SortedSet的添加元素指令<em>ZADD key score member [[score,member]…]</em>会给每个添加的元素member绑定一个用于排序的值score，SortedSet就会根据score值的大小对元素进行排序，在这里就可以将createDate当作score用于排序，SortedSet中的指令<em>ZREVRANGE key start stop</em>又可以返回指定区间内的成员，可以用来做分页，SortedSet的指令ZREM key member可以根据key移除指定的成员，能满足删评论的要求，所以，SortedSet在这里是最适合的。</p>
 </blockquote>
 <p>所以，我需要用到的数据类型有SortSet和Hash，SortSet用于做分页排序，Hash用于存储具体的键值对数据，我画出了如下的结构图：</p>
-<p><img src="http://nnblog-storage.b0.aicdn.com/img/redis.png!watermark1.0" alt="结构图"></p>
+<p><img src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/redis.png" alt="结构图"></p>
 <p>在上图的SortSet结构中将每个主题的topicId作为set的key，将与该主题关联的评论的createDate和commentId分别作为set的score和member，commentId的顺序就根据createDate的大小进行排列。<br>当需要查询某个主题某一页的评论时，就可主题的topicId通过指令<em>zrevrange topicId (page-1)×10 (page-1)×10+perPage</em>这样就能找出某个主题下某一页的按时间排好顺序的所有评论的commintId。page为查询第几页的页码，perPage为每页显示的条数。<br>当找到所有评论的commentId后，就可以把这些commentId作为key去Hash结构中去查询该条评论对应的内容。<br>这样就利用SortSet和Hash两种结构在Redis中达到了分页和排序的目的。</p>
 
       
@@ -568,7 +568,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://nnblog-storage.b0.aicdn.com/img/head-photo.jpg"
+                src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/head-photo.jpg"
                 alt="NiuNiu" />
             
               <p class="site-author-name" itemprop="name">NiuNiu</p>
@@ -716,7 +716,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

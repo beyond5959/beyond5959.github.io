@@ -127,12 +127,12 @@
 <meta property="og:site_name" content="NiuNiu&#39;s Note">
 <meta property="og:description" content="在开发中，为项目生成文档是很常见的需求，很多第三方库（如jsdoc、swagger等）的做法是为需要生成文档的函数编写相应的符合规范的注释，然后运行相应的命令，生成一个静态网页形式的文档。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://nnblog-storage.b0.aicdn.com/img/test_doc.jpg!watermark1.0">
-<meta property="og:updated_time" content="2019-08-28T16:02:32.066Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/test_doc.jpg">
+<meta property="og:updated_time" content="2021-01-08T15:02:37.868Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过单元测试为API自动生成文档">
 <meta name="twitter:description" content="在开发中，为项目生成文档是很常见的需求，很多第三方库（如jsdoc、swagger等）的做法是为需要生成文档的函数编写相应的符合规范的注释，然后运行相应的命令，生成一个静态网页形式的文档。">
-<meta name="twitter:image" content="http://nnblog-storage.b0.aicdn.com/img/test_doc.jpg!watermark1.0">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/test_doc.jpg">
 
 
 
@@ -349,7 +349,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="NiuNiu">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://nnblog-storage.b0.aicdn.com/img/head-photo.jpg">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/head-photo.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -454,7 +454,7 @@
 <p>utils.js代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line">      </span><br><span class="line"><span class="keyword">const</span> mdStr = &#123;&#125;;</span><br><span class="line">exports.test = <span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!mdStr[obj.group]) &#123;</span><br><span class="line">    mdStr[obj.group] = <span class="string">''</span>;</span><br><span class="line">    mdStr[obj.group] += <span class="string">'## '</span> + obj.group + <span class="string">'\n\n'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> fields = &#123;&#125;;</span><br><span class="line">       </span><br><span class="line">  mdStr[obj.group] += <span class="string">`### <span class="subst">$&#123; obj.title &#125;</span> \`<span class="subst">$&#123; obj.method &#125;</span>\` <span class="subst">$&#123; obj.url &#125;</span> \n\n#### 参数\n`</span>;</span><br><span class="line">  mdStr[obj.group] += <span class="string">'\n参数名 | 类型 | 是否必填 | 说明\n-----|-----|-----|-----\n'</span>;</span><br><span class="line">  <span class="built_in">Object</span>.keys(obj.params).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">param</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> paramVal = obj.params[param];</span><br><span class="line">    fields[param] = paramVal[<span class="string">'value'</span>];</span><br><span class="line">    mdStr[obj.group] += <span class="string">`<span class="subst">$&#123; param &#125;</span> | <span class="subst">$&#123; paramVal[<span class="string">'type'</span>] &#125;</span> | <span class="subst">$&#123; paramVal[<span class="string">'required'</span>] ? <span class="string">'是'</span> : <span class="string">'否'</span> &#125;</span> | <span class="subst">$&#123; paramVal[<span class="string">'desc'</span>] &#125;</span> \n`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">  mdStr[obj.group] += <span class="string">'\n#### 使用示例\n\n请求参数: \n\n'</span>;</span><br><span class="line">      </span><br><span class="line">  mdStr[obj.group] += <span class="string">'```json\n'</span> + <span class="built_in">JSON</span>.stringify(fields, <span class="literal">null</span>, <span class="number">2</span>) + <span class="string">'\n```\n'</span>;</span><br><span class="line">  mdStr[obj.group] += <span class="string">'\n返回结果:\n\n'</span>;</span><br><span class="line">       </span><br><span class="line">  <span class="keyword">if</span> (obj.url.indexOf(<span class="string">':'</span>) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">    obj.url = obj.url.replace(<span class="regexp">/:\w*/g</span>, <span class="function"><span class="keyword">function</span> (<span class="params">word</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> fields[word.substr(<span class="number">1</span>)];</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">        </span><br><span class="line">  obj.agent[obj.method](obj.url)</span><br><span class="line">  .set(obj.header || &#123;&#125;)</span><br><span class="line">  .query(fields)</span><br><span class="line">  .send(fields)</span><br><span class="line">  .expect(obj.expect)</span><br><span class="line">  .end(<span class="function"><span class="keyword">function</span> (<span class="params">err, res</span>) </span>&#123;</span><br><span class="line">    mdStr[obj.group] += <span class="string">'```json\n'</span> + <span class="built_in">JSON</span>.stringify(res.body, <span class="literal">null</span>, <span class="number">2</span>) + <span class="string">'\n```\n'</span>;</span><br><span class="line">    mdStr[obj.group] += <span class="string">'\n'</span>;</span><br><span class="line">       </span><br><span class="line">    <span class="keyword">if</span> (process.env[<span class="string">'GEN_DOC'</span>] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      fs.writeFileSync(path.resolve(__dirname, <span class="string">'./docs/'</span>, obj.file + <span class="string">'.md'</span>), mdStr[obj.group]);</span><br><span class="line">    &#125;</span><br><span class="line">    obj.callback(err, res);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这样，在根目录创建一个 docs 目录，运行 <code>npm run test:doc</code> 命令，就会在 docs 目录下生成文档。如果运行单元测试不想生成文档，直接用<code>npm test</code>就可以了，相应的package.json配置如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">  "test": "export NODE_ENV='test' &amp;&amp; mocha",</span><br><span class="line">  "test:doc": "export NODE_ENV='test' &amp;&amp; export GEN_DOC=1 &amp;&amp; mocha"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>如果不想为某个 API 生成文档，就不要调用 utils 的 test，直接按原生的写法就可以了。</p>
-<p>若需要对参数进行签名，可在调用 test 方法时，增加形如<code>sign: true</code>的配置，然后在 test 方法中做相应的判断和实现相应的签名。<br>生成的文档内容形式如下：<br><img src="http://nnblog-storage.b0.aicdn.com/img/test_doc.jpg!watermark1.0" alt="test_doc"></p>
+<p>若需要对参数进行签名，可在调用 test 方法时，增加形如<code>sign: true</code>的配置，然后在 test 方法中做相应的判断和实现相应的签名。<br>生成的文档内容形式如下：<br><img src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/test_doc.jpg" alt="test_doc"></p>
 
       
     </div>
@@ -568,7 +568,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://nnblog-storage.b0.aicdn.com/img/head-photo.jpg"
+                src="https://raw.githubusercontent.com/beyond5959/images/main/uPic/img/head-photo.jpg"
                 alt="NiuNiu" />
             
               <p class="site-author-name" itemprop="name">NiuNiu</p>
@@ -716,7 +716,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
